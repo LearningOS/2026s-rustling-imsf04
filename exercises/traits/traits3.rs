@@ -1,17 +1,17 @@
 // traits3.rs
 //
-// Your task is to implement the Licensed trait for both structures and have
-// them return the same information without writing the same function twice.
-//
-// Consider what you can add to the Licensed trait.
+// This is a setup similar to previous exercises. We'll add some default
+// implementation to the trait. You might want to have a look back at the
+// traits1/traits2 exercises.
 //
 // Execute `rustlings hint traits3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 pub trait Licensed {
-    fn licensing_info(&self) -> String;
+    fn licensing_info(&self) -> String{
+        String::from("Some information")
+    }
 }
 
 struct SomeSoftware {
@@ -22,21 +22,25 @@ struct OtherSoftware {
     version_number: String,
 }
 
-impl Licensed for SomeSoftware {} // Don't edit this line
-impl Licensed for OtherSoftware {} // Don't edit this line
+impl Licensed for SomeSoftware {}
+impl Licensed for OtherSoftware {}
+
+fn main() {
+    let some_software = SomeSoftware { version_number: 1 };
+    let other_software = OtherSoftware { version_number: "v2".to_string() };
+
+    println!("{} {}", some_software.licensing_info(), other_software.licensing_info());
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn is_licensing_info_the_same() {
-        let licensing_info = String::from("Some information");
+    fn is_licensed() {
         let some_software = SomeSoftware { version_number: 1 };
-        let other_software = OtherSoftware {
-            version_number: "v2.0.0".to_string(),
-        };
-        assert_eq!(some_software.licensing_info(), licensing_info);
-        assert_eq!(other_software.licensing_info(), licensing_info);
+        let other_software = OtherSoftware { version_number: "v2".to_string() };
+        assert_eq!(some_software.licensing_info(), "Some information");
+        assert_eq!(other_software.licensing_info(), "Some information");
     }
 }
