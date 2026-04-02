@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+//
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +69,57 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
+    where T: PartialOrd,
+    {
 		//TODO
-		Self {
-            length: 0,
+		let mut result = LinkedList {
+            length: list_a.length + list_b.length, // 长度直接等于两者之和
             start: None,
             end: None,
+	};
+
+    let mut curr_a = list_a.start;
+    let mut curr_b = list_b.start;
+    let mut tail: Option<NonNull<Node<T>>> = None;
+
+    while let (Some(a), Some(b)) = (curr_a, curr_b) {
+        let next_node = unsafe {
+            if (*a.as_ptr()).val <= (*b.as_ptr()).val {
+                curr_a = (*a.as_ptr()).next;
+                a
+            } else {
+                curr_b = (*b.as_ptr()).next;
+                b
+            }
+        };
+
+        match tail {
+            None => result.start = Some(next_node),
+            Some(t) => unsafe { (*t.as_ptr()).next = Some(next_node) },
         }
-	}
+        tail = Some(next_node);
+    }
+
+        let remaining = curr_a.or(curr_b);
+        let remaining_end = if curr_a.is_some() { list_a.end } else { list_b.end };
+        if let Some(rem) = remaining {
+            match tail {
+                None => result.start = Some(rem),
+                Some(t) => unsafe { (*t.as_ptr()).next = Some(rem) },
+            }
+            result.end = remaining_end;
+
+    }else {
+            result.end = tail;
+        }
+
+        list_a.start = None; list_a.end = None; list_a.length = 0;
+        list_b.start = None; list_b.end = None; list_b.length = 0;
+
+
+        result
+    }
 }
 
 impl<T> Display for LinkedList<T>
