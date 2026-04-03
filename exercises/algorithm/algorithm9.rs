@@ -2,7 +2,6 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -72,15 +71,14 @@ where
     fn smallest_child_idx(&self, idx: usize) -> usize {
         let left = self.left_child_idx(idx);
         let right = self.right_child_idx(idx);
+
         if right > self.count{
-            left;
-        } else {
-            if (self.comparator)(&self.items[left], &self.items[right]) {
-                left;
+            left
+        } else if (self.comparator)(&self.items[left], &self.items[right]) {
+                left
             } else {
-                right;
+                right
             }
-        }
     }
 }
 
